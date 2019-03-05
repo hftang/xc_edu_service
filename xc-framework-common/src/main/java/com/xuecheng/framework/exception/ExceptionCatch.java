@@ -25,7 +25,7 @@ public class ExceptionCatch {
     @ExceptionHandler(CustomException.class)
     @ResponseBody
     public ResponseResult customException(CustomException e){
-        logger.error("catch exception:{}"+e.getMessage());
+        logger.error("catch exception :::"+e.getResultCode());
 
         ResultCode resultCode = e.getResultCode();
 
