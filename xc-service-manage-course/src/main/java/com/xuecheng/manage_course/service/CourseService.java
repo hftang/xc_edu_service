@@ -2,6 +2,7 @@ package com.xuecheng.manage_course.service;
 
 import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.course.CourseBase;
+import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.response.CourseCode;
@@ -9,6 +10,7 @@ import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.dao.CourseBaseRepository;
+import com.xuecheng.manage_course.dao.CoursePicRepository;
 import com.xuecheng.manage_course.dao.TeachplanMapper;
 import com.xuecheng.manage_course.dao.TeachplanResposity;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +36,8 @@ public class CourseService {
     TeachplanResposity teachplanResposity;
     @Autowired
     CourseBaseRepository courseBaseRepository;
+    @Autowired
+    CoursePicRepository coursePicRepository;
 
     //课程计划的查询
 
@@ -127,5 +131,56 @@ public class CourseService {
         }
 
         return rootList.get(0).getId();//获取到根节点的id
+    }
+
+    //添加课程与课程图片
+    @Transactional
+    public ResponseResult addCoursePic(String courseId, String pic) {
+        CoursePic coursePic=null;
+        //先查询
+        Optional<CoursePic> optional = coursePicRepository.findById(courseId);
+        if(optional.isPresent()){
+             coursePic = optional.get();
+
+            coursePic.setCourseid(courseId);
+            coursePic.setPic(pic);
+        }else{
+            coursePic = new CoursePic();
+            coursePic.setCourseid(courseId);
+            coursePic.setPic(pic);
+
+        }
+        coursePicRepository.save(coursePic);
+        System.out.println("service:::"+coursePic);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    //查询课程图片
+    public CoursePic findCoursePic(String courseId) {
+
+        Optional<CoursePic> optional = coursePicRepository.findById(courseId);
+        if(optional.isPresent()){
+            CoursePic coursePic = optional.get();
+
+            return coursePic;
+        }
+
+        return null;
+
+
+    }
+
+    @Transactional
+    public ResponseResult deleteCoursePic(String courseId) {
+
+        long num = coursePicRepository.deleteByCourseid(courseId);
+
+        if(num>0){
+            return new ResponseResult(CommonCode.SUCCESS);
+        }else{
+            return new ResponseResult(CommonCode.FAIL);
+        }
+
+
     }
 }

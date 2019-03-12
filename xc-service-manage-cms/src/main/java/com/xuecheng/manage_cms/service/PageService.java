@@ -10,6 +10,7 @@ import com.xuecheng.framework.domain.cms.CmsTemplate;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -83,7 +84,7 @@ public class PageService {
      * @param queryPageRequest 查询条件
      * @return 页面列表
      */
-    public QueryResponseResult findList(int page, int size, QueryPageRequest queryPageRequest) {
+    public QueryResponseResult<CourseBase> findList(int page, int size, QueryPageRequest queryPageRequest) {
 
         if (queryPageRequest == null) {
             queryPageRequest = new QueryPageRequest();
@@ -126,7 +127,7 @@ public class PageService {
         cmsPageQueryResult.setList(all.getContent());
         cmsPageQueryResult.setTotal(all.getTotalElements());
 
-        return new QueryResponseResult(CommonCode.SUCCESS, cmsPageQueryResult);
+        return new QueryResponseResult<CourseBase>(CommonCode.SUCCESS, cmsPageQueryResult);
     }
 
     /***
