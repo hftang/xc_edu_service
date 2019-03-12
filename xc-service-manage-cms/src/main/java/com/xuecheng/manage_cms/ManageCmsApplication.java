@@ -3,6 +3,7 @@ package com.xuecheng.manage_cms;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -14,6 +15,8 @@ import org.springframework.web.client.RestTemplate;
  * @date 2019-02-27 10:41
  * @desc 启动类
  */
+
+@EnableDiscoveryClient
 @SpringBootApplication
 @EntityScan("com.xuecheng.framework.domain.cms") //实体类扫描
 @ComponentScan(basePackages = "com.xuecheng.api") //接口扫描
