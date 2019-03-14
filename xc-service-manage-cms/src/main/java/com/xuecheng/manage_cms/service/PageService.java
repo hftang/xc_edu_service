@@ -6,10 +6,12 @@ import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import com.xuecheng.framework.domain.cms.CmsConfig;
 import com.xuecheng.framework.domain.cms.CmsPage;
+import com.xuecheng.framework.domain.cms.CmsSite;
 import com.xuecheng.framework.domain.cms.CmsTemplate;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.domain.cms.response.CmsPostPageResult;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
@@ -19,6 +21,7 @@ import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_cms.config.RabbitmqConfig;
 import com.xuecheng.manage_cms.dao.CmsConfigResponsitory;
 import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import com.xuecheng.manage_cms.dao.CmsSiteResponsitory;
 import com.xuecheng.manage_cms.dao.CmsTemplateResponsitory;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -75,6 +78,8 @@ public class PageService {
     public GridFSBucket gridFSBucket;
     @Autowired
     RabbitTemplate rabbitTemplate;
+    @Autowired
+    CmsSiteResponsitory cmsSiteResponsitory;
 
 
     /***
@@ -226,14 +231,10 @@ public class PageService {
             CmsConfig cmsConfig = optional.get();
             return cmsConfig;
         }
-
         return null;
-
     }
 
-
     //页面静态化
-
     public String getPageHtml(String pageId){
         /***
          * 1、获取页面的dataurl
@@ -276,27 +277,19 @@ public class PageService {
      * @param pageId
      */
     private void sendPostPage(String pageId) {
-
         //0 获取到页面的信息 获得名字
         CmsPage cmsPage = findPageByid(pageId);
         if(cmsPage==null){
             ExceptionCast.cast(CmsCode.INVALID_PARAM);
         }
-
 //        拼装消息
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("pageId",pageId);
-
         String msg = JSON.toJSONString(hashMap);
-
         //站点
         String siteId = cmsPage.getSiteId();
 
-
-
         rabbitTemplate.convertAndSend(RabbitmqConfig.EX_ROUTING_CMS_POSTPAGE,siteId,msg);
-
-
 
     }
 
@@ -317,8 +310,6 @@ public class PageService {
 
         String pageName = cmsPage.getPageName();
 
-
-
         //1 保存到gridfs中
 
         InputStream inputStream = null;
@@ -337,14 +328,6 @@ public class PageService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
-
-
 
         return null;
     }
@@ -444,6 +427,66 @@ public class PageService {
     }
 
 
+    public CmsPageResult save(CmsPage cmsPage) {
+
+        CmsPage cmsPage1=null;
+        try {
+             cmsPage1 = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
+        if(cmsPage1!=null){
+            CmsPageResult update = this.update(cmsPage1.getPageId(), cmsPage);
+
+            return  update;
+
+        }else {
+            CmsPageResult addPage = this.addPage(cmsPage);
+            return addPage;
+        }
+    }
+
+    //一键发布
+    public CmsPostPageResult postPageQuick(CmsPage cmsPage) {
+
+        //保存在cms_page
+        CmsPageResult cmsPageResult = this.save(cmsPage);
+        if(!cmsPageResult.isSuccess()){
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+        CmsPage pageSave = cmsPageResult.getCmsPage();
+        //得到页面的id
+        String pageId = pageSave.getPageId();
+
+        //先静态化 保存到 GridField 向MQ发布消息
+        ResponseResult responseResult = this.post(pageId);
+        boolean success = responseResult.isSuccess();
+        if(!success){
+            ExceptionCast.cast(CommonCode.FAIL);
+        }
+
+        //拼装url  url=cmsSite.siteDomain+cmssite.sitewebpath+cmspage.pagewebpath+cmspage.pagename
+
+        String siteId = pageSave.getSiteId();
+        String pageUrl=null;
+        Optional<CmsSite> cmsSiteOptional = cmsSiteResponsitory.findById(siteId);
+        if(cmsSiteOptional.isPresent()){
+            CmsSite cmsSite = cmsSiteOptional.get();
+            String siteDomain = cmsSite.getSiteDomain();
+            String siteWebPath = cmsSite.getSiteWebPath();
+
+            String pageWebPath = pageSave.getPageWebPath();
+            String pageName = pageSave.getPageName();
+
+
+             pageUrl=siteDomain+siteWebPath+pageWebPath+pageName;
+
+        }
+
+        return new CmsPostPageResult(CommonCode.SUCCESS,pageUrl);
+
+
+    }
 }

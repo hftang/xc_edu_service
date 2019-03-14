@@ -4,6 +4,8 @@ import com.xuecheng.api.course.CourseControllerApi;
 import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
+import com.xuecheng.framework.domain.course.ext.CoursePublishResult;
+import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -89,6 +91,33 @@ public class CourseController implements CourseControllerApi {
     @DeleteMapping("/coursepic/delete")
     public ResponseResult delCoursePic(@RequestParam("courseId") String courseId) {
         return courseService.deleteCoursePic(courseId);
+    }
+
+    /***
+     * 根据课程id 查询课程视图详情
+     * @param courseId
+     * @return
+     */
+    @Override
+    @GetMapping("/courseview/{id}")
+    public CourseView courseView(@PathVariable("id") String courseId) {
+
+        return courseService.getCourseView(courseId);
+    }
+
+    @Override
+    @PostMapping("/preview/{id}")
+    public CoursePublishResult preview(@PathVariable("id") String id) {
+        return courseService.preview(id);
+    }
+
+    //一键发布
+    @Override
+    @PostMapping("/publish/{id}")
+    public CoursePublishResult publish(@PathVariable("id") String id) {
+
+
+        return courseService.publish(id);
     }
 
 

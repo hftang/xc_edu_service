@@ -43,16 +43,12 @@ public class GridFSTest {
 
     @Test
     public void testStore() throws FileNotFoundException {
-
         File file = new File("D:\\heima29\\index_banner.ftl");
         FileInputStream inputStream=new FileInputStream(file);
-
         ObjectId objectId = gridFsTemplate.store(inputStream, "index_banner.ftl");
         System.out.println(objectId);
         //5c7e17047823716e48f501a8
-
     }
-
     /**
      * 测试读文件
      */
@@ -63,7 +59,18 @@ public class GridFSTest {
         GridFsResource gridFsResource = new GridFsResource(gridFSFile, downloadStream);
         String s = IOUtils.toString(gridFsResource.getInputStream(), "utf-8");
         System.out.println(s);
+    }
+    //保存课程详情
 
+    @Test
+    public void testStoreCourseDetails() throws FileNotFoundException {
+
+        File file = new File("D:\\heima29\\templates\\course.ftl");
+        FileInputStream inputStream=new FileInputStream(file);
+
+        ObjectId objectId = gridFsTemplate.store(inputStream, "course.ftl");
+        System.out.println(objectId);
+        //5c8876b3782371622c4686c9
 
     }
 }

@@ -16,5 +16,5 @@ spring:
 
 xuecheng:
   mq:
-    queue: queue_cms_postpage_01
+    queue: queue_cms_postpage_03
     routingKey: 5a751fab6abb5044e0d19ea1

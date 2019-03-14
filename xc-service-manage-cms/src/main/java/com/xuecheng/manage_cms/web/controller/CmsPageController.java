@@ -4,6 +4,7 @@ import com.xuecheng.api.cms.CmsPageControllerApi;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.domain.cms.response.CmsPostPageResult;
 import com.xuecheng.framework.domain.course.CourseBase;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
@@ -27,26 +28,6 @@ public class CmsPageController implements CmsPageControllerApi {
     @GetMapping("/list/{page}/{size}")
     public QueryResponseResult<CourseBase> findList(@PathVariable("page") int page, @PathVariable("size") int size, QueryPageRequest queryPageRequest) {
 
-//
-//        ResultCode resultCode= CommonCode.SUCCESS;
-//        QueryResult queryList=new QueryResult();
-//        queryList.setTotal(2);
-//
-//        List list=new ArrayList();
-//        CmsPage cmsPage01=new CmsPage();
-//        cmsPage01.setPageName("测试页面001");
-//        list.add(cmsPage01);
-//
-//        CmsPage cmsPage02=new CmsPage();
-//        cmsPage02.setPageName("测试页面002");
-//        list.add(cmsPage02);
-//
-//        queryList.setList(list);
-//
-//        QueryResponseResult queryResponseResult = new QueryResponseResult(resultCode, queryList);
-//
-//
-//        return queryResponseResult;
         return pageService.findList(page, size, queryPageRequest);
 
 
@@ -92,5 +73,23 @@ public class CmsPageController implements CmsPageControllerApi {
 
 
         return pageService.post(pageId);
+    }
+
+    //保存页面
+
+    @Override
+    @PostMapping("/save")
+    public CmsPageResult save(@RequestBody CmsPage cmsPage) {
+        CmsPageResult save = pageService.save(cmsPage);
+
+        return save;
+    }
+
+    //课程发布
+    @Override
+    @PostMapping("/postPageQuick")
+    public CmsPostPageResult postPageQuick(@RequestBody CmsPage cmsPage) {
+
+        return pageService.postPageQuick(cmsPage);
     }
 }

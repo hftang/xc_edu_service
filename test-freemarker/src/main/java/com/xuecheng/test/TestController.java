@@ -40,4 +40,15 @@ public class TestController {
 
         return "test1";
     }
+
+
+    @RequestMapping("/course")
+    public String testCourse(Map<String,Object> map){
+        ResponseEntity<Map> entity = restTemplate.getForEntity("http://localhost:31200/course/courseview/402885816243d2dd016243f24c030002", Map.class);
+        Map body = entity.getBody();
+
+        map.putAll(body);
+
+        return "course";
+    }
 }

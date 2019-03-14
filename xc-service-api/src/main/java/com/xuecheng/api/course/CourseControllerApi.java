@@ -3,12 +3,15 @@ package com.xuecheng.api.course;
 import com.xuecheng.framework.domain.course.CoursePic;
 import com.xuecheng.framework.domain.course.Teachplan;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
+import com.xuecheng.framework.domain.course.ext.CoursePublishResult;
+import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author hftang
@@ -52,4 +55,13 @@ public interface CourseControllerApi {
         public CoursePic findCoursePic(String courseId);
         @ApiOperation("删除课程的图片根据课程id")
         public ResponseResult delCoursePic(String courseId);
+
+        @ApiOperation("课程视图的查询")
+        public CourseView courseView(String courseId);
+
+        @ApiOperation("预览课程")
+        public CoursePublishResult preview(String id);
+
+        @ApiOperation("课程发布")
+        public CoursePublishResult publish(@PathVariable("id") String id);
 }
