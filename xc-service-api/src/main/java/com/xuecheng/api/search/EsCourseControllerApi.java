@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiOperation;
  * @date 2019-03-18 14:10
  * @desc
  */
-@Api(value = "搜索服务的api")
+@Api(value = "课程搜索",description = "课程搜索",tags = {"课程搜索"})
 public interface EsCourseControllerApi {
 
     //搜索课程信息
