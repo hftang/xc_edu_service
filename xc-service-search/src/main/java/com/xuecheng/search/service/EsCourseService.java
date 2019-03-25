@@ -165,9 +165,7 @@ public class EsCourseService {
                         for (Text nameFragment : nameFragments) {
                             stringBuffer.append(nameFragment);
                         }
-
                         name = stringBuffer.toString();
-
                     }
                 }
 
