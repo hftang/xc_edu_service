@@ -1,17 +1,21 @@
 package com.xuecheng.manage_course.service;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.response.CmsCode;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.domain.cms.response.CmsPostPageResult;
 import com.xuecheng.framework.domain.course.*;
-import com.xuecheng.framework.domain.course.ext.CoursePublishResult;
-import com.xuecheng.framework.domain.course.ext.CourseView;
-import com.xuecheng.framework.domain.course.ext.TeachplanNode;
+import com.xuecheng.framework.domain.course.ext.*;
+import com.xuecheng.framework.domain.course.request.CourseListRequest;
+import com.xuecheng.framework.domain.course.response.AddCourseResult;
 import com.xuecheng.framework.domain.course.response.CourseCode;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.CommonCode;
+import com.xuecheng.framework.model.response.QueryResponseResult;
+import com.xuecheng.framework.model.response.QueryResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.client.CmsPageClient;
 import com.xuecheng.manage_course.dao.*;
@@ -23,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +56,19 @@ public class CourseService {
     CmsPageClient cmsPageClient;
     @Autowired
     CoursePubRepository coursePubRepository;
+    @Autowired
+    TeachplanMediaRepository teachplanMediaRepository;
+
+    @Autowired
+    CategoryMapper categoryMapper;
+    @Autowired
+    CourseMapper courseMapper;
+    @Autowired
+    CourseMarketRepository courseMarketRepository;
+
+    @Autowired
+    TeachplanMediaPubRepository teachplanMediaPubRepository;
+
 
     @Value("${course-publish.dataUrlPre}")
     private String publish_dataUrlPre;
@@ -318,9 +336,46 @@ public class CourseService {
         System.out.println(coursePub1);
         //缓存课程信息
         String pageUrl = cmsPostPageResult.getPageUrl();
+        //向teachplanMeaiaPub中保存课程媒资信息
+
+        saveTeachplanMediaPub(id);
 
 
         return new CoursePublishResult(CommonCode.SUCCESS, pageUrl);
+
+    }
+
+    //向teachplanMeaiaPub中保存课程媒资信息
+    public void saveTeachplanMediaPub(String courseId) {
+        try {
+
+            //从teachplanmedia中查询
+            List<TeachplanMedia> teachplanMediaList = teachplanMediaRepository.findByCourseId(courseId);
+            //先删除
+            teachplanMediaPubRepository.deleteByCourseId(courseId);
+
+
+
+            List<TeachplanMediaPub> teachplanMediaPubs = new ArrayList<>();
+
+            for (TeachplanMedia teachplanMedia : teachplanMediaList) {
+                TeachplanMediaPub teachplanMediaPub = new TeachplanMediaPub();
+
+                BeanUtils.copyProperties(teachplanMedia, teachplanMediaPub);
+                //设置时间戳
+                teachplanMediaPub.setTimestamp(new Date());
+
+                teachplanMediaPubs.add(teachplanMediaPub);
+            }
+            //将上面list 插入到teachplanMeadiaPub表中
+            teachplanMediaPubRepository.saveAll(teachplanMediaPubs);
+
+        } catch (Exception e) {
+            String s = e.toString();
+            System.out.println(s);
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -329,10 +384,10 @@ public class CourseService {
     public CoursePub createCoursePub(String courseId) {
         CoursePub coursePub = new CoursePub();
         Optional<CourseBase> courseBaseOptional = courseBaseRepository.findById(courseId);
-        if(courseBaseOptional.isPresent()){
+        if (courseBaseOptional.isPresent()) {
             CourseBase courseBase = courseBaseOptional.get();
             //copy到coursePub中
-            BeanUtils.copyProperties(courseBase,coursePub);
+            BeanUtils.copyProperties(courseBase, coursePub);
         }
 
         //将课程计划信息查到 然后转成json串 给 coursePub
@@ -344,18 +399,18 @@ public class CourseService {
     }
 
     //保存coursePub
-    private CoursePub saveCoursePub(String coursId,CoursePub coursePub){
+    private CoursePub saveCoursePub(String coursId, CoursePub coursePub) {
         Optional<CoursePub> repository = coursePubRepository.findById(coursId);
 
-        CoursePub coursePub_new=null;
+        CoursePub coursePub_new = null;
         //先查 有则更新 无则插入
-        if(repository.isPresent()){
+        if (repository.isPresent()) {
             coursePub_new = repository.get();
-        }else {
-            coursePub_new=new CoursePub();
+        } else {
+            coursePub_new = new CoursePub();
         }
 
-        BeanUtils.copyProperties(coursePub,coursePub_new);
+        BeanUtils.copyProperties(coursePub, coursePub_new);
         coursePub_new.setCharge("203002");
         coursePub_new.setValid("204001");
         coursePub_new.setId(coursId);
@@ -372,7 +427,6 @@ public class CourseService {
         return coursePub_new;
 
 
-
     }
 
     //更改课程的状态 已发布的状态为202002
@@ -381,5 +435,126 @@ public class CourseService {
         courseBase.setStatus("202002");
         courseBaseRepository.save(courseBase);
         return courseBase;
+    }
+
+    //保存课程与媒资之间的关系
+    public ResponseResult save(TeachplanMedia teachplanMedia) {
+
+        if (teachplanMedia == null || StringUtils.isEmpty(teachplanMedia.getTeachplanId())) {
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        //课程计划是否是3级
+        String teachplanId = teachplanMedia.getTeachplanId();
+        Optional<Teachplan> optional = teachplanResposity.findById(teachplanId);
+        if (!optional.isPresent()) {
+            ExceptionCast.cast(CommonCode.INVALID_PARAM);
+        }
+        //查询到了教学计划
+        Teachplan teachplan = optional.get();
+
+        String grade = teachplan.getGrade();
+
+        if (StringUtils.isEmpty(grade) || !grade.equals("3")) {
+            ExceptionCast.cast(CourseCode.COURSE_MEDIS_TEACHPLAN_GRADEERROR);
+        }
+
+        Optional<TeachplanMedia> optional1 = teachplanMediaRepository.findById(teachplanId);
+        TeachplanMedia one;
+        if (optional1.isPresent()) {
+            one = optional1.get();
+        } else {
+            one = new TeachplanMedia();
+        }
+        //保存到数据库
+        one.setCourseId(teachplan.getCourseid());
+        one.setMediaId(teachplanMedia.getMediaId());
+        one.setMediaFileOriginalName(teachplanMedia.getMediaFileOriginalName());
+        one.setMediaUrl(teachplanMedia.getMediaUrl());
+        one.setTeachplanId(teachplanId);
+
+        teachplanMediaRepository.save(one);
+
+
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    //查询分类信息
+    public CategoryNode findCategoryList() {
+        CategoryNode categoryNode = categoryMapper.selectList();
+        return categoryNode;
+    }
+
+    public AddCourseResult addCourseBase(CourseBase courseBase) {
+        // TODO 需要根据moongodb的数据字典查, 暂时设死
+        courseBase.setStatus("202001");
+        CourseBase save = courseBaseRepository.save(courseBase);
+        return new AddCourseResult(CommonCode.SUCCESS, save.getId());
+    }
+
+    public QueryResponseResult findCourseList(int page, int size, CourseListRequest courseListRequest, String companyId) {
+        courseListRequest = courseListRequest == null ? new CourseListRequest() : courseListRequest;
+        //企业id,将companyId传给dao
+        courseListRequest.setCompanyId(companyId);
+        page = page <= 0 ? 1 : page;
+        size = size <= 0 ? 20 : size;
+        //设置分页参数
+        PageHelper.startPage(page, size);
+        //分页查询
+        Page<CourseInfo> courseInfoPage = courseMapper.findCourseListPage(courseListRequest);
+        List<CourseInfo> courseInfoList = courseInfoPage.getResult();
+        long total = courseInfoPage.getTotal();
+        //查询结果集
+        QueryResult<CourseInfo> queryResult = new QueryResult<>();
+        queryResult.setList(courseInfoList);
+        queryResult.setTotal(total);
+        return new QueryResponseResult(CommonCode.SUCCESS, queryResult);
+    }
+
+    //获取课程基本信息
+    public CourseBase getCourseBaseById(String courseId) {
+        Optional<CourseBase> courseBaseOptional = courseBaseRepository.findById(courseId);
+        if (!courseBaseOptional.isPresent()) {
+            ExceptionCast.cast(CourseCode.COURSE_NOT_FOUND);
+        }
+        return courseBaseOptional.get();
+    }
+
+    //更新课程
+    public ResponseResult updateCourseBase(String id, CourseBase courseBase) {
+        CourseBase one = getCourseBaseById(id);
+        one.setName(courseBase.getName());
+        one.setUsers(courseBase.getUsers());
+        one.setMt(courseBase.getMt());
+        one.setSt(courseBase.getSt());
+        one.setGrade(courseBase.getGrade());
+        one.setStudymodel(courseBase.getStudymodel());
+        one.setDescription(courseBase.getDescription());
+        courseBaseRepository.save(one);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
+
+    public CourseMarket getCourseMarketById(String courseId) {
+        Optional<CourseMarket> courseMarketOptional = courseMarketRepository.findById(courseId);
+        if (!courseMarketOptional.isPresent()) {
+            return null;
+        }
+        return courseMarketOptional.get();
+    }
+
+    public ResponseResult updateCourseMarket(String id, CourseMarket courseMarket) {
+        CourseMarket one = getCourseMarketById(id);
+        if (one == null) {
+            courseMarket.setId(id);
+            courseMarketRepository.save(courseMarket);
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        one.setCharge(courseMarket.getCharge());
+        one.setValid(courseMarket.getValid());
+        one.setQq(courseMarket.getQq());
+        one.setPrice(courseMarket.getPrice());
+        one.setStartTime(courseMarket.getStartTime());
+        one.setEndTime(courseMarket.getEndTime());
+        courseMarketRepository.save(one);
+        return new ResponseResult(CommonCode.SUCCESS);
     }
 }

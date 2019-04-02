@@ -1,18 +1,20 @@
 package com.xuecheng.manage_course.controller;
 
 import com.xuecheng.api.course.CourseControllerApi;
-import com.xuecheng.framework.domain.course.CoursePic;
-import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.course.*;
 import com.xuecheng.framework.domain.course.ext.CourseInfo;
 import com.xuecheng.framework.domain.course.ext.CoursePublishResult;
 import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
+import com.xuecheng.framework.domain.course.response.AddCourseResult;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author hftang
@@ -40,7 +42,6 @@ public class CourseController implements CourseControllerApi {
     public ResponseResult addTeachPlan(@RequestBody Teachplan teachplan) {
 
 
-
         return courseService.addTeachPlan(teachplan);
     }
 
@@ -54,6 +55,7 @@ public class CourseController implements CourseControllerApi {
 
     /**
      * 添加课程和课程图片
+     *
      * @param courseId
      * @param pic
      * @return
@@ -63,10 +65,10 @@ public class CourseController implements CourseControllerApi {
     @PostMapping("/coursepic/add")
     public ResponseResult addCoursePic(@RequestParam("courseId") String courseId, @RequestParam("pic") String pic) {
 
-        System.out.println("controller::: courseId:"+courseId+"pic::"+pic);
+        System.out.println("controller::: courseId:" + courseId + "pic::" + pic);
 
 
-        return courseService.addCoursePic(courseId,pic);
+        return courseService.addCoursePic(courseId, pic);
     }
 
     /***
@@ -118,6 +120,102 @@ public class CourseController implements CourseControllerApi {
 
 
         return courseService.publish(id);
+    }
+
+    // //保存课程与媒资计划关联
+    @Override
+    @PostMapping("/savemedia")
+    public ResponseResult saveMedia(@RequestBody TeachplanMedia teachplanMedia) {
+
+
+        return courseService.save(teachplanMedia);
+    }
+
+    /**
+     * 添加课程基础信息
+     *
+     * @param courseBase
+     * @return
+     */
+    @PostMapping("/coursebase/add")
+    public AddCourseResult addCourseBase(@RequestBody CourseBase courseBase) {
+
+        return courseService.addCourseBase(courseBase);
+    }
+
+    /**
+     * 查询我的课程列表
+     *
+     * @param page
+     * @param size
+     * @param courseListRequest
+     * @return
+     */
+    @GetMapping("/coursebase/list/{page}/{size}")
+    public QueryResponseResult findCourseList(
+            @PathVariable("page") int page,
+            @PathVariable("size") int size,
+            CourseListRequest courseListRequest,
+            HttpServletRequest request
+
+    ) {
+        //调用工具类取出用户信息
+//        XcOauth2Util xcOauth2Util = new XcOauth2Util();
+//        XcOauth2Util.UserJwt userJwt = xcOauth2Util.getUserJwtFromHeader(request);
+//        if (userJwt == null) {
+//            ExceptionCast.cast(CommonCode.UNAUTHENTICATED);
+//        }
+//        String companyId = userJwt.getCompanyId();
+
+        return courseService.findCourseList(page, size, courseListRequest, "001");
+    }
+
+    /**
+     * 获取课程基础信息
+     *
+     * @param courseId
+     * @return
+     */
+//    @PreAuthorize("hasAuthority('course_get_baseinfo')")
+    @GetMapping("/getCoursebaseById/{courseId}")
+    public CourseBase getCourseBaseById(@PathVariable("courseId") String courseId) {
+        return courseService.getCourseBaseById(courseId);
+    }
+
+    /**
+     * 更新课程基础信息
+     *
+     * @param id
+     * @param courseBase
+     * @return
+     */
+    @PutMapping("/updateCoursebase/{id}")
+    public ResponseResult updateCourseBase(@PathVariable("id") String id, @RequestBody CourseBase courseBase) {
+        String s = courseBase.toString();
+        System.out.println(s);
+
+        return courseService.updateCourseBase(id, courseBase);
+    }
+
+    /**
+     * 获取课程营销信息
+     * @param courseId
+     * @return
+     */
+    @GetMapping("/coursemarket/get/{courseId}")
+    public CourseMarket getCourseMarketById(@PathVariable("courseId") String courseId) {
+        return courseService.getCourseMarketById(courseId);
+    }
+
+    /**
+     * 更新课程营销信息
+     * @param id
+     * @param courseMarket
+     * @return
+     */
+    @PostMapping("/coursemarket/update/{id}")
+    public ResponseResult updateCourseMarket(@PathVariable("id") String id, @RequestBody CourseMarket courseMarket) {
+        return courseService.updateCourseMarket(id, courseMarket);
     }
 
 

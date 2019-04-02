@@ -2,7 +2,7 @@ server:
   port: ${port:40100}
 spring:
   application:
-    name: xc-search-service
+    name: xc-service-search
 xuecheng:
   elasticsearch:
     hostlist: ${eshostlist:127.0.0.1:9200} #多个结点中间用逗号分隔
@@ -10,3 +10,25 @@ xuecheng:
     index: xc_course
     type: doc
     source_field: id,name,grade,mt,st,charge,valid,pic,qq,price,price_old,status,studymodel,teachmode,expires,pub_time,start_time,end_time
+
+  media:
+    index: xc_course_media
+    type: doc
+    source_field: courseid,media_id,media_url,teachplan_id,media_fileoriginalname
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://localhost:50101/eureka/}
+  instance:
+    prefer-ip-address: true
+    ip-address: ${IP_ADDRESS:127.0.0.1}
+    instance-id: ${spring.application.name}.${server.port}
+ribbon:
+  MaxAutoRetries: 2
+  MaxAutoRetriesNextServer: 3
+  OkToRetryOnAllOperations: false
+  ConnectTimeout: 5000
+  ReadTimeout: 6000
