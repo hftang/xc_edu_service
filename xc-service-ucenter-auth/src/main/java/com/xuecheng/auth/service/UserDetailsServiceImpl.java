@@ -43,19 +43,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (StringUtils.isEmpty(username)) {
             return null;
         }
-
         //远程调用用户中心 根据账号查询用户信息
         XcUserExt userext = userClient.getUserext(username);
-
         if (userext == null) {
             return null;
         }
-
-
 //        XcUserExt userext = new XcUserExt();
 //        userext.setUsername("itcast");
 //        userext.setPassword(new BCryptPasswordEncoder().encode("123"));
-        userext.setPermissions(new ArrayList<XcMenu>());//权限先用静态的
+//        userext.setPermissions(new ArrayList<XcMenu>());//权限先用静态的
 //        if (userext == null) {
 //            return null;
 //        }
@@ -66,12 +62,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //用户权限，这里暂时使用静态数据，最终会从数据库读取
         //从数据库获取权限
         List<XcMenu> permissions = userext.getPermissions();
+        if (permissions == null) {
+            permissions = new ArrayList<>();
+        }
+
         List<String> user_permission = new ArrayList<>();
         permissions.forEach(item -> user_permission.add(item.getCode()));
 
         //使用静态的权限来表示用户所拥有的权限
-        user_permission.add("course_get_baseinfo");
-        user_permission.add("course_pic_list");
+//        user_permission.add("course_get_baseinfo");
+//        user_permission.add("course_pic_list");
 
         String user_permission_string = StringUtils.join(user_permission.toArray(), ",");
 

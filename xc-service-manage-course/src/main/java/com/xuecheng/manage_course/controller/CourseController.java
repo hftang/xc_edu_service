@@ -12,6 +12,7 @@ import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
 import com.xuecheng.manage_course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,8 @@ public class CourseController implements CourseControllerApi {
 
 
     //查询课程计划
+    //添加方法授权
+    @PreAuthorize("hasAuthority('course_teachplan_list')")
     @Override
     @GetMapping("/teachplan/list/{courseId}")
     public TeachplanNode findTeachplanList(@PathVariable("courseId") String courseId) {
@@ -37,37 +40,30 @@ public class CourseController implements CourseControllerApi {
     }
 
     //添加课程计划
+    //添加方法授权
+    @PreAuthorize("hasAuthority('course_teachplan_add')")
     @Override
     @PostMapping("/teachplan/add")
     public ResponseResult addTeachPlan(@RequestBody Teachplan teachplan) {
-
-
         return courseService.addTeachPlan(teachplan);
     }
 
     @Override
     @RequestMapping("/course")
     public QueryResponseResult<CourseInfo> findCourseList(int page, int size, CourseListRequest courseListRequest) {
-
-
         return null;
     }
 
     /**
      * 添加课程和课程图片
-     *
      * @param courseId
      * @param pic
      * @return
      */
-
     @Override
     @PostMapping("/coursepic/add")
     public ResponseResult addCoursePic(@RequestParam("courseId") String courseId, @RequestParam("pic") String pic) {
-
         System.out.println("controller::: courseId:" + courseId + "pic::" + pic);
-
-
         return courseService.addCoursePic(courseId, pic);
     }
 
@@ -76,6 +72,9 @@ public class CourseController implements CourseControllerApi {
      * @param courseId
      * @return
      */
+    //添加方法授权
+    //当用户有了 这个权限course_pic_list 才能查询图片列表
+    @PreAuthorize("hasAuthority('course_pic_list')")
     @Override
     @GetMapping("/coursepic/list/{courseId}")
     public CoursePic findCoursePic(@PathVariable("courseId") String courseId) {

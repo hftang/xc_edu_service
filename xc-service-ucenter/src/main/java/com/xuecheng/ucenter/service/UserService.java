@@ -1,13 +1,17 @@
 package com.xuecheng.ucenter.service;
 
 import com.xuecheng.framework.domain.ucenter.XcCompanyUser;
+import com.xuecheng.framework.domain.ucenter.XcMenu;
 import com.xuecheng.framework.domain.ucenter.XcUser;
 import com.xuecheng.framework.domain.ucenter.ext.XcUserExt;
 import com.xuecheng.ucenter.dao.XcCompanyUserRepository;
+import com.xuecheng.ucenter.dao.XcMeunMapper;
 import com.xuecheng.ucenter.dao.XcUserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author hftang
@@ -17,6 +21,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
+    @Autowired
+    XcMeunMapper xcMeunMapper;
 
     @Autowired
     XcUserRepository xcUserRepository;
@@ -35,6 +42,10 @@ public class UserService {
         }
         String userId = xcUser.getId();
 
+        //查询用户的所有权限
+        List<XcMenu> xcMenus = xcMeunMapper.selectPermissonByUserId(userId);
+
+
         //根据用户的id查询用户所属的公司id
         XcCompanyUser xcCompanyUser = xcCompanyUserRepository.findByUserId(userId);
         //获取到用户的公司id
@@ -48,6 +59,8 @@ public class UserService {
         BeanUtils.copyProperties(xcUser, xcUserExt);
 
         xcUserExt.setCompanyId(companyId);
+        //设置权限
+        xcUserExt.setPermissions(xcMenus);
         return xcUserExt;
     }
 

@@ -62,7 +62,7 @@ public class TestClient {
 
         body.add("grant_type", "password");
         body.add("username", "itcast");
-        body.add("password", "123");
+        body.add("password", "111111");
 
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(body, header);

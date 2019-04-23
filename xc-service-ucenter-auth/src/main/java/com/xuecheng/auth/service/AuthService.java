@@ -148,8 +148,14 @@ public class AuthService {
 
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(body, header);
-
-        ResponseEntity<Map> exchange = restTemplate.exchange(authUrl, HttpMethod.POST, httpEntity, Map.class);
+        ResponseEntity<Map> exchange = null;
+        try {
+            exchange = restTemplate.exchange(authUrl, HttpMethod.POST, httpEntity, Map.class);
+        } catch (Exception e) {
+            String message = e.getMessage();
+            e.printStackTrace();
+            System.out.println(message);
+        }
 
         //对错误发生的理解
         restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
