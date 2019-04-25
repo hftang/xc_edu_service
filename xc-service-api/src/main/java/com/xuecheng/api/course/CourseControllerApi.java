@@ -20,21 +20,22 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @desc 课程api
  */
 
-@Api(value = "课程管理接口" , description = "课程管理接口 提供课程的 增删改查")
+@Api(value = "课程管理接口", description = "课程管理接口 提供课程的 增删改查")
 public interface CourseControllerApi {
 
     @ApiOperation("课程计划查询")
     public TeachplanNode findTeachplanList(String courseId);
-    @ApiOperation("添加课程计划")
-   public ResponseResult addTeachPlan(Teachplan teachplan);
 
-    @ApiOperation("查询我的课程列表")
-    public QueryResponseResult<CourseInfo> findCourseList(
-            int page,
-            int size,
-            CourseListRequest courseListRequest
-    );
-//
+    @ApiOperation("添加课程计划")
+    public ResponseResult addTeachPlan(Teachplan teachplan);
+
+//    @ApiOperation("查询我的课程列表")
+//    public QueryResponseResult<CourseInfo> findCourseList(
+//            int page,
+//            int size,
+//            CourseListRequest courseListRequest
+//    );
+
 //    @ApiOperation("查询分类")
 //    public CategoryNode findList();
 //
@@ -48,24 +49,28 @@ public interface CourseControllerApi {
 //    public CourseMarket getCourseMarketById(String courseId);
 //    @ApiOperation("更新课程营销信息")
 //    public ResponseResult updateCourseMarket(String id,CourseMarket courseMarket);
-//
-        @ApiOperation("添加课程与课程图片之间的关联")
-    public ResponseResult addCoursePic(String courseId,String pic);
 
-        @ApiOperation("查询课程图片")
-        public CoursePic findCoursePic(String courseId);
-        @ApiOperation("删除课程的图片根据课程id")
-        public ResponseResult delCoursePic(String courseId);
+    @ApiOperation("添加课程与课程图片之间的关联")
+    public ResponseResult addCoursePic(String courseId, String pic);
 
-        @ApiOperation("课程视图的查询")
-        public CourseView courseView(String courseId);
+    @ApiOperation("查询课程图片")
+    public CoursePic findCoursePic(String courseId);
 
-        @ApiOperation("预览课程")
-        public CoursePublishResult preview(String id);
+    @ApiOperation("删除课程的图片根据课程id")
+    public ResponseResult delCoursePic(String courseId);
 
-        @ApiOperation("课程发布")
-        public CoursePublishResult publish(@PathVariable("id") String id);
+    @ApiOperation("课程视图的查询")
+    public CourseView courseView(String courseId);
 
-        @ApiOperation("保存课程计划与媒资文件的关联")
-        public ResponseResult saveMedia(TeachplanMedia teachplanMedia);
+    @ApiOperation("预览课程")
+    public CoursePublishResult preview(String id);
+
+    @ApiOperation("课程发布")
+    public CoursePublishResult publish(@PathVariable("id") String id);
+
+    @ApiOperation("保存课程计划与媒资文件的关联")
+    public ResponseResult saveMedia(TeachplanMedia teachplanMedia);
+
+    @ApiOperation("课程查询")
+    public QueryResponseResult<CourseInfo> findCourseList(int page, int size, CourseListRequest courseListRequest);
 }

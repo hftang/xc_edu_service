@@ -24,6 +24,9 @@ public class CategoryController implements CategoryControllerApi {
     @Override
     @GetMapping("/list")
     public CategoryNode findList() {
-        return courseService.findCategoryList();
+
+        CategoryNode categoryList = courseService.findCategoryList();
+
+        return categoryList;
     }
 }

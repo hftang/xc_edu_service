@@ -61,6 +61,7 @@ public class CourseService {
 
     @Autowired
     CategoryMapper categoryMapper;
+
     @Autowired
     CourseMapper courseMapper;
     @Autowired
@@ -355,7 +356,6 @@ public class CourseService {
             teachplanMediaPubRepository.deleteByCourseId(courseId);
 
 
-
             List<TeachplanMediaPub> teachplanMediaPubs = new ArrayList<>();
 
             for (TeachplanMedia teachplanMedia : teachplanMediaList) {
@@ -474,13 +474,14 @@ public class CourseService {
 
         teachplanMediaRepository.save(one);
 
-
         return new ResponseResult(CommonCode.SUCCESS);
     }
 
     //查询分类信息
     public CategoryNode findCategoryList() {
+
         CategoryNode categoryNode = categoryMapper.selectList();
+
         return categoryNode;
     }
 
@@ -491,23 +492,29 @@ public class CourseService {
         return new AddCourseResult(CommonCode.SUCCESS, save.getId());
     }
 
-    public QueryResponseResult findCourseList(int page, int size, CourseListRequest courseListRequest, String companyId) {
+    //查询课程
+    public QueryResponseResult<CourseInfo> findCourseList(String companyId, int page, int size, CourseListRequest courseListRequest) {
+
+        //不能让查询条件为空
         courseListRequest = courseListRequest == null ? new CourseListRequest() : courseListRequest;
+
         //企业id,将companyId传给dao
         courseListRequest.setCompanyId(companyId);
+
         page = page <= 0 ? 1 : page;
         size = size <= 0 ? 20 : size;
         //设置分页参数
         PageHelper.startPage(page, size);
-        //分页查询
+        //分页查询 组装数据
         Page<CourseInfo> courseInfoPage = courseMapper.findCourseListPage(courseListRequest);
+
         List<CourseInfo> courseInfoList = courseInfoPage.getResult();
-        long total = courseInfoPage.getTotal();
+        long total = courseInfoPage.getTotal();//总记录数
         //查询结果集
         QueryResult<CourseInfo> queryResult = new QueryResult<>();
         queryResult.setList(courseInfoList);
         queryResult.setTotal(total);
-        return new QueryResponseResult(CommonCode.SUCCESS, queryResult);
+        return new QueryResponseResult<CourseInfo>(CommonCode.SUCCESS, queryResult);
     }
 
     //获取课程基本信息

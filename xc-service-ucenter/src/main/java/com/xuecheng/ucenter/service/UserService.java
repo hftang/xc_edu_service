@@ -5,7 +5,7 @@ import com.xuecheng.framework.domain.ucenter.XcMenu;
 import com.xuecheng.framework.domain.ucenter.XcUser;
 import com.xuecheng.framework.domain.ucenter.ext.XcUserExt;
 import com.xuecheng.ucenter.dao.XcCompanyUserRepository;
-import com.xuecheng.ucenter.dao.XcMeunMapper;
+import com.xuecheng.ucenter.dao.XcMeunMapperr;
 import com.xuecheng.ucenter.dao.XcUserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    XcMeunMapper xcMeunMapper;
+    XcMeunMapperr xcMeunMapper;
 
     @Autowired
     XcUserRepository xcUserRepository;
@@ -50,6 +50,7 @@ public class UserService {
         XcCompanyUser xcCompanyUser = xcCompanyUserRepository.findByUserId(userId);
         //获取到用户的公司id
         String companyId = null;
+
         if (xcCompanyUser != null) {
             companyId = xcCompanyUser.getCompanyId();
         }

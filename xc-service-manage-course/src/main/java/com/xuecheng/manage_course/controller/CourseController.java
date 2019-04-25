@@ -8,8 +8,12 @@ import com.xuecheng.framework.domain.course.ext.CourseView;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.domain.course.response.AddCourseResult;
+import com.xuecheng.framework.exception.ExceptionCast;
+import com.xuecheng.framework.model.response.CommonCode;
 import com.xuecheng.framework.model.response.QueryResponseResult;
 import com.xuecheng.framework.model.response.ResponseResult;
+import com.xuecheng.framework.utils.XcOauth2Util;
+import com.xuecheng.framework.web.BaseController;
 import com.xuecheng.manage_course.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/course")
-public class CourseController implements CourseControllerApi {
+public class CourseController extends BaseController implements CourseControllerApi {
     @Autowired
     CourseService courseService;
 
@@ -56,6 +60,7 @@ public class CourseController implements CourseControllerApi {
 
     /**
      * 添加课程和课程图片
+     *
      * @param courseId
      * @param pic
      * @return
@@ -155,18 +160,21 @@ public class CourseController implements CourseControllerApi {
             @PathVariable("page") int page,
             @PathVariable("size") int size,
             CourseListRequest courseListRequest,
-            HttpServletRequest request
-
-    ) {
+            HttpServletRequest request) {
         //调用工具类取出用户信息
-//        XcOauth2Util xcOauth2Util = new XcOauth2Util();
-//        XcOauth2Util.UserJwt userJwt = xcOauth2Util.getUserJwtFromHeader(request);
-//        if (userJwt == null) {
-//            ExceptionCast.cast(CommonCode.UNAUTHENTICATED);
-//        }
-//        String companyId = userJwt.getCompanyId();
+        XcOauth2Util xcOauth2Util = new XcOauth2Util();
+        XcOauth2Util.UserJwt userJwt = xcOauth2Util.getUserJwtFromHeader(request);
+        if (userJwt == null) {
+            ExceptionCast.cast(CommonCode.UNAUTHENTICATED);
+        }
+        String company_id = userJwt.getCompanyId();
 
-        return courseService.findCourseList(page, size, courseListRequest, "001");
+        //当前用户所属单位的id
+//        String company_id = "1";
+
+        QueryResponseResult<CourseInfo> courseList = courseService.findCourseList(company_id, page, size, courseListRequest);
+
+        return courseList;
     }
 
     /**
@@ -198,6 +206,7 @@ public class CourseController implements CourseControllerApi {
 
     /**
      * 获取课程营销信息
+     *
      * @param courseId
      * @return
      */
@@ -208,6 +217,7 @@ public class CourseController implements CourseControllerApi {
 
     /**
      * 更新课程营销信息
+     *
      * @param id
      * @param courseMarket
      * @return

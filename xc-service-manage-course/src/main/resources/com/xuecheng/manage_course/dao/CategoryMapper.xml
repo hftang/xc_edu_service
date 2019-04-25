@@ -30,29 +30,29 @@
     </resultMap>
     <select id="selectList" resultMap="CategoryNodeMap" >
           select
-          a.id one_id,
-          a.name one_name,
-          a.label one_label,
-          a.isshow one_isshow,
-          a.isleaf one_isleaf,
-          a.orderby one_orderby,
-          a.parentid one_parentid,
-          b.id two_id,
-          b.name two_name,
-          b.label two_label,
-          b.isshow two_isshow,
-          b.isleaf two_isleaf,
-          b.orderby two_orderby,
-          b.parentid two_parentid,
-          c.id three_id,
-          c.name three_name,
-          c.label three_label,
-          c.isshow three_isshow,
-          c.isleaf three_isleaf,
-          c.orderby three_orderby,
-          c.parentid three_parentid
+              a.id one_id,
+              a.name one_name,
+              a.label one_label,
+              a.isshow one_isshow,
+              a.isleaf one_isleaf,
+              a.orderby one_orderby,
+              a.parentid one_parentid,
+              b.id two_id,
+              b.name two_name,
+              b.label two_label,
+              b.isshow two_isshow,
+              b.isleaf two_isleaf,
+              b.orderby two_orderby,
+              b.parentid two_parentid,
+              c.id three_id,
+              c.name three_name,
+              c.label three_label,
+              c.isshow three_isshow,
+              c.isleaf three_isleaf,
+              c.orderby three_orderby,
+              c.parentid three_parentid
         from
-          category a
+              category a
           left join category b
             on b.parentid = a.id
           left join category c

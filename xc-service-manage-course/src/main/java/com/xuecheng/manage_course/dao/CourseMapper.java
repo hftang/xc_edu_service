@@ -17,5 +17,6 @@ public interface CourseMapper {
 
    Page<CourseBase> findCourseList();
 
+   //细粒度授权
    Page<CourseInfo> findCourseListPage(CourseListRequest courseListRequest);
 }
