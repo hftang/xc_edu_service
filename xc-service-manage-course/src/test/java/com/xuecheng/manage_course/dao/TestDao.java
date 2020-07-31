@@ -29,6 +29,7 @@ public class TestDao {
 
     @Test
     public void test_TeachplanMapper(){
+        //88888888
         TeachplanNode teachplanNode = teachplanMapper.selectList("4028e581617f945f01617f9dabc40000");
         System.out.println(teachplanNode);
     }
