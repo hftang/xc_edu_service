@@ -28,7 +28,12 @@ public class TestDao {
     TeachplanMapper teachplanMapper;
 
     @Test
-    public void test_TeachplanMapper(){
+    public void test04() {
+        System.out.println("====8888====");
+    }
+
+    @Test
+    public void test_TeachplanMapper() {
         //88888888
         TeachplanNode teachplanNode = teachplanMapper.selectList("4028e581617f945f01617f9dabc40000");
         System.out.println(teachplanNode);
@@ -36,9 +41,9 @@ public class TestDao {
 
 
     @Test
-    public void testCourseBaseRepository(){
+    public void testCourseBaseRepository() {
         Optional<CourseBase> optional = courseBaseRepository.findById("402885816240d276016240f7e5000002");
-        if(optional.isPresent()){
+        if (optional.isPresent()) {
             CourseBase courseBase = optional.get();
             System.out.println(courseBase);
         }
@@ -46,15 +51,15 @@ public class TestDao {
     }
 
     @Test
-    public void testCourseMapper(){
+    public void testCourseMapper() {
         CourseBase courseBase = courseMapper.findCourseBaseById("402885816240d276016240f7e5000002");
         System.out.println(courseBase);
 
     }
 
     @Test
-    public void testPageHelper(){
-        PageHelper.startPage(1,10);// 定义开始页 以及每页显示的条数 开始页从1开始
+    public void testPageHelper() {
+        PageHelper.startPage(1, 10);// 定义开始页 以及每页显示的条数 开始页从1开始
         Page<CourseBase> courseList = courseMapper.findCourseList();
         long total = courseList.getTotal();
 
