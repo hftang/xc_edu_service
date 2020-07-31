@@ -1,0 +1,161 @@
+[33mcommit 5156d22103dcbf027b51785df4061acf825c56f9[m[33m ([m[1;36mHEAD -> [m[1;32mhftang888[m[33m)[m
+Author: hftang <617775384@qq.com>
+Date:   Fri Jul 31 15:22:41 2020 +0800
+
+    添加hftang888
+
+[33mcommit e45dc97b72a2d9fca9f3afd8533c76bca54bdadb[m
+Author: hftang <617775384@qq.com>
+Date:   Fri Jul 31 15:18:45 2020 +0800
+
+    '提交一个测试方法'
+
+[33mcommit 678d6df2c1356f1789f980ac6f7b30eb5c233b63[m
+Author: hftang <617775384@qq.com>
+Date:   Fri Jul 31 15:13:47 2020 +0800
+
+    8888
+
+[33mcommit 29e01ed73b35054db461ac43cc6cabe3f5b261b7[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Apr 25 09:14:55 2019 +0800
+
+    第19天 完结
+
+[33mcommit 7a19cdf862d704ac51408bdad7d2f5a45f50fc3a[m
+Author: hftang <617775384@qq.com>
+Date:   Tue Apr 23 12:46:00 2019 +0800
+
+    18天 添加用户授权中心02
+
+[33mcommit 201f243b22de506954c4b7b467d9f4d04a849386[m
+Author: hftang <617775384@qq.com>
+Date:   Fri Apr 19 14:08:43 2019 +0800
+
+    18天 添加用户授权中心
+
+[33mcommit 02469eac5f3c2b589b705c3bd3874cc63e13f670[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Apr 18 11:12:01 2019 +0800
+
+    17天 jwt 用户的登录和退出 获取jwt token令牌 存入 redis 和 cookie中 添加一个工程 用户中心
+
+[33mcommit 8e28eb3aaf600ac88dacac0a27c3d9dc7718d6b0[m
+Author: hftang <617775384@qq.com>
+Date:   Tue Apr 2 18:13:03 2019 +0800
+
+    15天 学习中心 获取视频播放url
+
+[33mcommit f2d1eaa6c2efa1094b7f55383dab7fecee8fb79c[m
+Author: hftang <617775384@qq.com>
+Date:   Tue Mar 26 17:18:22 2019 +0800
+
+    14 avi转MP4 MP4转hls ts文件 视频文件的处理 和mq 配置线程池 多线程处理 queue
+
+[33mcommit 089976875c6ea51aa04b372d8984cd488299fd75[m
+Author: hftang <617775384@qq.com>
+Date:   Mon Mar 25 18:05:37 2019 +0800
+
+    13天 文件的上传 和 文件分块 合并
+
+[33mcommit 6525f9fa5bbc988fe8f3ca097a08030285208005[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Mar 21 15:32:59 2019 +0800
+
+    12天 elasticsearch 的 关键字 高亮 分页 搜索完成
+
+[33mcommit 32fbad2b7732af1e4839d2baf8247965dc80746d[m
+Author: hftang <617775384@qq.com>
+Date:   Mon Mar 18 18:12:26 2019 +0800
+
+    第11天 elasticsearch 添加索引
+
+[33mcommit 4393e4526a4b7141bacdb39d82c66499064bfc8c[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Mar 14 16:33:30 2019 +0800
+
+    添加elasticsearch 搜索 索引库
+
+[33mcommit e363f4b63e643c0085846b024868addc835e749c[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Mar 14 10:02:08 2019 +0800
+
+    课程的预览和发布
+
+[33mcommit cb08dae7bd02ac08139689e70ed6e0c04e93b56a[m
+Author: hftang <617775384@qq.com>
+Date:   Tue Mar 12 14:35:27 2019 +0800
+
+    完成hibbon客户端负载均衡的调用  feign完成远程调用服务  eureka注册微服务 以及多eureka多备份搭建
+
+[33mcommit 44638d4b9907c10613e6a3ee4921481cdc87eece[m
+Author: hftang <617775384@qq.com>
+Date:   Tue Mar 12 10:09:53 2019 +0800
+
+    课程图片的添加删除
+
+[33mcommit 53980d01cc6fc305530b81949bbca6eb9c421bd0[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Mar 7 18:27:29 2019 +0800
+
+    课件的列表查询 和 课件的添加
+
+[33mcommit 683ed3fc70cbc95c1f99ae310f9181d638869d5b[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Mar 7 13:41:24 2019 +0800
+
+    添加课程管理 微服务
+
+[33mcommit 379ae31742b21266978a3113f2a151b4578da41f[m
+Author: hftang <617775384@qq.com>
+Date:   Thu Mar 7 10:31:01 2019 +0800
+
+    静态页面 发布业务逻辑完成
+
+[33mcommit 9eebd32faf4c27aac771cbff4b8e149d88ddc319[m
+Author: hftang <617775384@qq.com>
+Date:   Wed Mar 6 15:15:06 2019 +0800
+
+    rabbitmq demo 测试
+
+[33mcommit aee999c2bd0fd88383fed6005923754001845da3[m
+Author: hftang <617775384@qq.com>
+Date:   Tue Mar 5 16:01:34 2019 +0800
+
+    freemarker 生成静态页面 和 gridfs 保存页面 读取页面 删除页面
+
+[33mcommit 37f19d5b8ad28f645e8e3cf7e1255a1f13d0a67b[m
+Author: hftang <617775384@qq.com>
+Date:   Mon Mar 4 10:38:01 2019 +0800
+
+    全局的异常处理类 捕获类 完成
+
+[33mcommit 45626fb33a9fbec1c642e79736f5011a6d734f88[m
+Author: hftang <617775384@qq.com>
+Date:   Mon Mar 4 09:43:48 2019 +0800
+
+    增删改 页面完成
+
+[33mcommit a8f5397a81153a200127982b9af26faa37422407[m
+Author: hftang <617775384@qq.com>
+Date:   Fri Mar 1 15:47:07 2019 +0800
+
+    添加页面
+
+[33mcommit 2cedfe848ace6c13d651ae6717521be5caf80b63[m
+Author: hftang <617775384@qq.com>
+Date:   Fri Mar 1 10:29:39 2019 +0800
+
+    查询页面 根据别名 和 别名的模糊查询
+
+[33mcommit bec0cecaf487af7ed255cbce047bec173b7a3bef[m
+Author: hftang <617775384@qq.com>
+Date:   Wed Feb 27 17:11:08 2019 +0800
+
+    swagger 和 分页查询完成
+
+[33mcommit 661a728dc60fcc877f409aad44ad70b74f9df984[m
+Author: hftang <617775384@qq.com>
+Date:   Wed Feb 27 09:11:04 2019 +0800
+
+    first commit
