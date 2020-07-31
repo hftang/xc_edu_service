@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.ReceiverShareMapper">
+
+
+    <insert id="insertReceiverShare" useGeneratedKeys="true" keyProperty="id" keyColumn="id"
+            parameterType="com.xuecheng.manage_course.entity.ReceiverShare">
+
+    INSERT INTO tab_share_receiver(
+    id,
+  share_id,
+  receiver_id
+    )
+    VALUES(
+        null,
+       #{share_id},
+       #{receiver_id}
+
+      )
+
+    </insert>
+
+    <resultMap id="mReceiverShare" type="com.xuecheng.manage_course.entity.ReceiverShare">
+        <id property="id" column="id"/>
+        <result property="share_id" column="share_id"/>
+        <result property="receiver_id" column="receiver_id"/>
+
+        <collection property="receiverList" ofType="com.xuecheng.manage_course.entity.Receiver">
+            <id property="id" column="r_id"/>
+            <result property="receiver_id" column="recId"/>
+            <result property="receiver_header" column="receiver_header"/>
+            <result property="revciver_name" column="revciver_name"/>
+            <result property="score" column="score"/>
+
+        </collection>
+
+
+    </resultMap>
+
+    <select id="findReceiverShareById" resultMap="mReceiverShare">
+      SELECT
+        sr.id,
+        sr.receiver_id,
+        sr.share_id,
+        r.id r_id,
+        r.receiver_header,
+        r.receiver_name,
+        r.receiver_id recId,
+        r.score
+    FROM
+        tab_share_receiver sr
+    LEFT JOIN tab_receiver r ON sr.receiver_id = r.receiver_id
+    LEFT JOIN tab_share s ON sr.share_id = s.share_id
+    WHERE
+        sr.receiver_id = #{id}
+    </select>
+
+
+    <!--根据分享者的id-->
+
+    <resultMap id="mShareReceiver" type="com.xuecheng.manage_course.entity.ReceiverShare">
+        <id property="id" column="id"/>
+        <result property="share_id" column="share_id"/>
+        <result property="receiver_id" column="receiver_id"/>
+
+        <collection property="shareList" ofType="com.xuecheng.manage_course.entity.Share">
+            <id property="id" column="t_id"/>
+            <result property="share_id" column="sh_id"></result>
+            <result property="share_header" column="share_header"></result>
+            <result property="share_name" column="share_name"></result>
+            <result property="score" column="score"></result>
+
+        </collection>
+
+
+    </resultMap>
+
+
+    <select id="findReceiverShareByShareId" resultMap="mShareReceiver">
+
+        SELECT
+            sr.id,
+            sr.receiver_id,
+            sr.share_id,
+            s.id t_id,
+            s.score,
+            s.share_header,
+            s.share_id sh_id ,
+            s.share_name
+
+        FROM
+            tab_share_receiver sr
+        LEFT JOIN tab_share s ON sr.share_id = s.share_id
+        LEFT JOIN tab_receiver r ON sr.receiver_id = r.receiver_id
+        WHERE
+            sr.share_id = #{shareId}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.ReceiverMapper">
+
+
+    <insert id="addReceiver" useGeneratedKeys="true"  keyProperty="id" keyColumn="id" parameterType="com.xuecheng.manage_course.entity.Receiver">
+
+    INSERT INTO tab_receiver(
+    id,
+    receiver_id,
+    receiver_header,
+    receiver_name,
+    score
+    )
+    VALUES(
+        null,
+       #{receiver_id},
+       #{receiver_header},
+       #{revciver_name},
+       #{score}
+      );
+
+    </insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
