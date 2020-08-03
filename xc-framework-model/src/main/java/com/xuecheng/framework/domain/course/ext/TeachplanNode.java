@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 public class TeachplanNode extends Teachplan {
 
-    List<TeachplanNode> children;
+
 
     //媒资文件的id
 
@@ -21,5 +21,7 @@ public class TeachplanNode extends Teachplan {
 
     //媒资文件的原始名称
     String mediaFileOriginalName;
+
+    List<TeachplanNode> children;
 
 }

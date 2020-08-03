@@ -12,4 +12,8 @@ public interface CoursePicRepository extends JpaRepository<CoursePic,String> {
 
     long deleteByCourseid(String courseId);
 
+
+
+
+
 }

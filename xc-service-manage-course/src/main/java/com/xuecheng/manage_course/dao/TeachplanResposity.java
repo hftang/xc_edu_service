@@ -3,6 +3,7 @@ package com.xuecheng.manage_course.dao;
 import com.xuecheng.framework.domain.course.Teachplan;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface TeachplanResposity extends JpaRepository<Teachplan,String> {
 
     //根据 courseId 和 parenterid
     @ApiOperation("查询根目录")
-    public List<Teachplan> findTeachplanByCourseidAndParentid(String courseId,String parentId);
+    List<Teachplan> findTeachplanByCourseidAndParentid(@Param("courseId") String courseId, @Param("parentId") String parentId);
 }

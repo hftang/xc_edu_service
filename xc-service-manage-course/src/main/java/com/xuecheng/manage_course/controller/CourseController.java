@@ -33,7 +33,7 @@ public class CourseController extends BaseController implements CourseController
     CourseService courseService;
 
 
-    //查询课程计划
+    //查询课程计划 根据课程id查询课程计划
     //添加方法授权
     @PreAuthorize("hasAuthority('course_teachplan_list')")
     @Override
